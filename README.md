@@ -59,7 +59,10 @@ cargo build --release
 
 生成的动态库：
 
-![image-20220430114046744](README.assets/image-20220430114046744.png)
+```bash
+lynn@DESKTOP-M96JUD3:~/openharmony/marker-detection/target/release$ file libmarker_detection.so
+libmarker_detection.so: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, BuildID[sha1]=820f6cfcd1675b01e23d18543ad8ad9b388, with debug_info, not stripped
+```
 
 node测试：
 
