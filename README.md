@@ -18,8 +18,6 @@ cargo new marker-detection
 
 [Cargo Targets - The Cargo Book (rust-lang.org)](https://doc.rust-lang.org/cargo/reference/cargo-targets.html)
 
-![image-20220430114705836](README.assets/image-20220430114705836.png)
-
 ## 第一个napi-rs：fibonacci
 
 Cargo.toml
