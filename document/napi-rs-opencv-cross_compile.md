@@ -1,4 +1,4 @@
-# Rust交叉编译 - 目标平台为aarch64的opencv napi-rs动态库
+# napi-rs-opencv-cross_compile
 
 - 参考：[rust-cross](https://github.com/japaric/rust-cross)
 
@@ -39,7 +39,7 @@ $ cargo version
 cargo 1.60.0-nightly (95bb3c92b 2022-01-18)
 ```
 
-## 2. 拷贝所需工具
+## 2. 配置交叉编译工具链
 
 1. 拷贝已交叉编译好的opencv/out/到~/目录下 
 2. 拷贝交叉编译所需工具clang/ musl/到~/env/目录下
@@ -57,9 +57,26 @@ cargo 1.60.0-nightly (95bb3c92b 2022-01-18)
 
 ```bash
 vim ~/.bashrc
+source ~/.bashrc
 ```
 
-添加
+## 3. 配置opencv napi-rs binding 
+
+opencv4交叉编译生成的动态库位置：hit@hit-tg-node-1:~/wxc/OpenCV/out/lib
+
+将/out/lib拷贝到wsl2-/home/lynn/opencv目录下
+
+> 将lib.tar拷贝到指定位置，然后`tar -xvf lib.tar`解压
+>
+> 这样动态库是包含软链接的（虽然不知道需不需要）
+
+添加环境变量（opencv包含contrib）
+
+```bash
+vim ~/.bashrc
+```
+
+在末尾写入：
 
 ```bash
 export OpenCV_DIR=/home/lynn/opencv/out/lib/cmake/opencv4
@@ -68,7 +85,11 @@ export LD_LIBRARY_PATH=/home/lynn/opencv/out/lib
 
 >[Rust OpenCV bindings](https://github.com/twistedfall/opencv-rust)要求
 
->![image-20220318192004680](Rust交叉编译napi-rs动态库.assets/image-20220318192004680.png)
+>Getting the OpenCV library (linux):
+>
+>- build OpenCV manually and set up the following environment variables prior to building the project with `opencv` crate:
+>  - `PKG_CONFIG_PATH` for the location of `*.pc` files or `OpenCV_DIR` for the location of `*.cmake` files
+>  - `LD_LIBRARY_PATH` for where to look for the installed `*.so` files during runtime
 
 使环境变量生效
 
@@ -76,7 +97,7 @@ export LD_LIBRARY_PATH=/home/lynn/opencv/out/lib
 source ~/.bashrc
 ```
 
-## 3. 交叉编译
+## 4. 交叉编译
 
 进入目标文件夹rust-opencv
 

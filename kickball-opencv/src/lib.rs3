@@ -1,0 +1,54 @@
+//pub mod hilog;
+
+use napi::bindgen_prelude::*;
+use napi_derive::napi;
+use log::info;
+
+
+#[napi]
+pub fn hello() {
+    info!("hello from napi");
+}
+
+#[napi]
+pub fn hilog(log: String) {
+    info!("Log from js to rust log: {:?}", log)
+}
+
+#[napi]
+pub fn add(a: f64, b: f64) -> f64 {
+    a + b
+}
+
+#[napi]
+pub fn sum(num: Float64Array) -> f64 {
+    num.iter().sum()
+}
+
+#[napi]
+pub fn fib(n: i64) -> i64 {
+    match n {
+        0 | 1 => 1,
+        _ => fib(n - 1) + fib(n - 2),
+    }
+}
+
+static mut MODULE: sys::napi_module = sys::napi_module {
+    nm_version: 1,
+    nm_flags: 0,
+    nm_filename: "lib.rs\u{0}".as_ptr() as *const _,
+    nm_register_func: Some(napi_register_module_v1),
+    nm_modname: concat!(env!("CARGO_PKG_NAME"), "\u{0}").as_ptr() as *const _,
+    nm_priv: std::ptr::null_mut(),
+    reserved: [std::ptr::null_mut(); 4],
+};
+
+#[napi::bindgen_prelude::ctor]
+fn _my_module_init() {
+    log::set_logger(&hilog::HiLog).unwrap();
+    unsafe { sys::napi_module_register(&mut MODULE as *mut _) }
+}
+
+extern "C" {
+    fn napi_register_module_v1(env: sys::napi_env, exports: sys::napi_value) -> sys::napi_value;
+}

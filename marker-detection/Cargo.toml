@@ -11,4 +11,5 @@ crate-type = ["cdylib"]
 [dependencies]
 napi = "2"
 napi-derive = "2"
+opencv = "0.63"
 
