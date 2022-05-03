@@ -41,8 +41,7 @@ cargo 1.60.0-nightly (95bb3c92b 2022-01-18)
 
 ## 2. 配置交叉编译工具链
 
-1. 拷贝已交叉编译好的opencv/out/到~/目录下 
-2. 拷贝交叉编译所需工具clang/ musl/到~/env/目录下
+1. 拷贝交叉编译所需工具clang/ musl/到~/env/目录下
 2. 加入可执行权限
 
 ```bash
@@ -62,7 +61,7 @@ source ~/.bashrc
 
 ## 3. 配置opencv napi-rs binding 
 
-opencv4交叉编译生成的动态库位置：hit@hit-tg-node-1:~/wxc/OpenCV/out/lib
+opencv4(含contrib)交叉编译生成的动态库位置：hit@hit-tg-node-1:~/wxc/OpenCV/out/lib
 
 将/out/lib拷贝到wsl2-/home/lynn/opencv目录下
 

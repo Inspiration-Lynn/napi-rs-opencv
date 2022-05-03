@@ -86,30 +86,13 @@ node fibonacci.js
 
 ## napi-rs opencv binding配置
 
-- [twistedfall/opencv-rust: Rust bindings for OpenCV 3 & 4 (github.com)](https://github.com/twistedfall/opencv-rust)
+- 具体步骤：[twistedfall/opencv-rust: Rust bindings for OpenCV 3 & 4 (github.com)](https://github.com/twistedfall/opencv-rust)
 
-### 配置opencv动态库
+### 手动编译安装opencv(含contrib)
 
-opencv4交叉编译生成的动态库位置：hit@hit-tg-node-1:~/wxc/OpenCV/out/lib
+- 参考：[OpenCV: Installation in Linux](https://docs.opencv.org/4.5.5/d7/d9f/tutorial_linux_install.html)
 
-将/out/lib拷贝到wsl2-/home/lynn/opencv目录下
-
-> 将lib.tar拷贝到指定位置，然后`tar -xvf lib.tar`解压
->
-> 这样动态库是包含软链接的（虽然不知道需不需要）
-
-添加环境变量（opencv包含contrib）
-
-```bash
-vim ~/.bashrc
-```
-
-在末尾写入：
-
-```bash
-export OpenCV_DIR=/home/lynn/opencv/out/lib/cmake/opencv4
-export LD_LIBRARY_PATH=/home/lynn/opencv/out/lib
-```
+### 配置opencv环境变量
 
 >[Rust OpenCV bindings](https://github.com/twistedfall/opencv-rust)要求
 
@@ -119,19 +102,40 @@ export LD_LIBRARY_PATH=/home/lynn/opencv/out/lib
 >  - `PKG_CONFIG_PATH` for the location of `*.pc` files or `OpenCV_DIR` for the location of `*.cmake` files
 >  - `LD_LIBRARY_PATH` for where to look for the installed `*.so` files during runtime
 
-使环境变量生效
+```bash
+vim ~/.bashrc
+```
+
+在末尾写入：
+
+```bash
+export OpenCV_DIR=/usr/local/lib/cmake/opencv4
+export LD_LIBRARY_PATH=/usr/local/lib
+```
+
+使环境变量生效：
 
 ```bash
 source ~/.bashrc
 ```
 
-### 配置clang工具链
+> **[troubleshooting]**
+>
+> 参考：[unresolved imports `opencv::highgui`, `opencv::videoio` · Issue #230 · twistedfall/opencv-rust (github.com)](https://github.com/twistedfall/opencv-rust/issues/230)
+>
+> Specifying the OpenCV *build* directory as *install* directory falsely:
+>
+> ```
+> OpenCV_DIR = Some("/home/rprata/Projects/opencv/build/")
+> ```
+>
+> this is currently not supported. Install OpenCV after building and then specify the directory where it was installed to.
+
+### 安装clang
 
 Additionally, please make sure to install `clang` package or its derivative that contains `libclang.so` and `clang` binary.
 
 - Debian, Ubuntu: `clang` and `libclang-dev`
-
-[maybe]
 
 ```bash
  sudo apt-get update -y
@@ -139,7 +143,7 @@ Additionally, please make sure to install `clang` package or its derivative that
  sudo apt install clang
 ```
 
-验证：
+验证安装成功：
 
 ```bash
 lynn@DESKTOP-M96JUD3:~$ clang --version
@@ -154,4 +158,4 @@ Thread model: posix
 InstalledDir: /usr/bin
 ```
 
-安装ninja
+### 安装ninja
