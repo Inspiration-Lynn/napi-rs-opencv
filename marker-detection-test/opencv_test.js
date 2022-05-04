@@ -8,7 +8,6 @@ var opcv = new a.OpenCv();
 console.log("[before imRead]");
 var src = opcv.imRead("ball.jpg");
 console.log("[after imRead]");
-
 opcv.imWrite("./out/output.jpg", src);
 
-opcv.detectMarkers("marker.png", "./out/marker_out.png");
+opcv.detectMarkers("marker.png", "./out/marker_out1.png");

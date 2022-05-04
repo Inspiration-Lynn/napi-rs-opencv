@@ -81,7 +81,6 @@ impl OpenCv {
 
   #[napi]
   pub fn detect_markers(&self, env: Env, filename_in: String, filename_out: String) {
-    println!("1");
     let image = imread(&filename_in, 1).expect("imread fail");
     let dictionary: Ptr<Dictionary> = get_predefined_dictionary_i32(DICT_6X6_250).expect("get_predefined_dictionary fail");
     let mut corners: VectorOfVectorOfPoint2f = VectorOfVectorOfPoint2f::default();
@@ -89,20 +88,19 @@ impl OpenCv {
     let parameters: Ptr<DetectorParameters> = DetectorParameters::create().expect("DetectorParameters::create fail");
     let mut rejected_img_points: VectorOfVectorOfPoint2f = VectorOfVectorOfPoint2f::default();
 
-    println!("2");
     detect_markers(&image, &dictionary, &mut corners, &mut ids, &parameters, &mut rejected_img_points, &no_array(), &no_array()).expect("detect_marker fail");
-    println!("corners: {:?}", corners);
+    // println!("corners: {:?}", corners);
 
+    let mut clone_img: Mat = opencv::core::Mat::clone(&image);
+    
+    let border_color: Scalar = Scalar::new(0.0, 255.0, 0.0, 0.0);
+    draw_detected_markers(&mut clone_img, &corners, &ids, border_color).expect("draw_detected_markers fail");
 
-    println!("3");
-    let clone_img: Mat = opencv::core::Mat::clone(&image);
-    println!("4");
     imwrite(&filename_out.to_string(), &clone_img, &Vector::new()).expect("imwrite fail");
-
-
   }
 
 
+  
 }
 
 
