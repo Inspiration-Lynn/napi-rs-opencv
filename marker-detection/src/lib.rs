@@ -16,6 +16,18 @@ fn fibonacci(n: u32) -> u32 {
   }
 }
 
+pub fn read_camera_parameters(filename: String) -> (Mat, Mat){
+  // read camera parameters from yml/yaml
+  let mut camera_matrix: Mat = Mat::default();
+  let mut dist_coeffs: Mat = Mat::default();
+  let fs: FileStorage = FileStorage::new(&filename, 0, &String::new()).expect("FileStorage::new fail");
+  camera_matrix = fs.get_node("camera_matrix").expect("get_node fail").mat().expect("mat fail");
+  dist_coeffs = fs.get_node("distortion_coefficients").expect("get_node fail").mat().expect("mat fail");
+  println!("camera_matrix: {:?}", camera_matrix);
+  println!("dist_coeffs: {:?}", dist_coeffs);
+
+  (camera_matrix, dist_coeffs)
+}
 
 // #[napi]
 // pub enum PREDEFINED_DICTIONARY_NAME {
@@ -79,8 +91,10 @@ impl OpenCv {
     imwrite(&filename, src, &Vector::new()).expect("imwrite fail");
   }
 
+
   #[napi]
-  pub fn detect_markers(&self, env: Env, filename_in: String, filename_out: String) {
+  pub fn detect_markers(&self, env: Env, filename_in: String, filename_out: String, camera_params: String) {
+    // marker detection
     let image = imread(&filename_in, 1).expect("imread fail");
     let dictionary: Ptr<Dictionary> = get_predefined_dictionary_i32(DICT_6X6_250).expect("get_predefined_dictionary fail");
     let mut corners: VectorOfVectorOfPoint2f = VectorOfVectorOfPoint2f::default();
@@ -92,15 +106,39 @@ impl OpenCv {
     // println!("corners: {:?}", corners);
 
     let mut clone_img: Mat = opencv::core::Mat::clone(&image);
-    
     let border_color: Scalar = Scalar::new(0.0, 255.0, 0.0, 0.0);
     draw_detected_markers(&mut clone_img, &corners, &ids, border_color).expect("draw_detected_markers fail");
-
     imwrite(&filename_out.to_string(), &clone_img, &Vector::new()).expect("imwrite fail");
+
+    // read camera parameters from yml/yaml
+    let mut camera_matrix: Mat = Mat::default();
+    let mut dist_coeffs: Mat = Mat::default();
+    // let fs: FileStorage = FileStorage::new(&camera_params, 0, &String::new()).expect("FileStorage::new fail");
+    // camera_matrix = fs.get_node("camera_matrix").expect("get_node fail").mat().expect("mat fail");
+    // dist_coeffs = fs.get_node("distortion_coefficients").expect("get_node fail").mat().expect("mat fail");
+    // println!("camera_matrix: {:?}", camera_matrix);
+    // println!("dist_coeffs: {:?}", dist_coeffs);
+    (camera_matrix, dist_coeffs) = read_camera_parameters(camera_params);
+
+    // pose estimation
+    // if at least one marker detected
+    if ids.len() > 0 {
+      let mut rvecs: VectorOfPoint3d = VectorOfPoint3d::default();
+      let mut tvecs: VectorOfPoint3d = VectorOfPoint3d::default();
+      estimate_pose_single_markers(&corners, 0.05, &camera_matrix, &dist_coeffs, &mut rvecs, &mut tvecs, &mut no_array());
+      println!("rvecs: {:?}", rvecs);
+      println!("tvecs: {:?}", tvecs);
+
+      let image2 = imread(&filename_in, IMREAD_GRAYSCALE).expect("imread fail");
+      let mut clone_img: Mat = opencv::core::Mat::clone(&image2);
+      // println!("len: {:?}", ids.len());
+    }
+
+
   }
 
 
-  
+
 }
 
 

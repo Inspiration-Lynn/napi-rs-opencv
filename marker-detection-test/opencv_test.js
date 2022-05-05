@@ -10,4 +10,8 @@ var src = opcv.imRead("ball.jpg");
 console.log("[after imRead]");
 opcv.imWrite("./out/output.jpg", src);
 
-opcv.detectMarkers("marker.png", "./out/marker_out1.png");
+opcv.detectMarkers(
+  "marker.png",
+  "./out/marker_out1.png",
+  "./tutorial_camera_params.yml"
+);
