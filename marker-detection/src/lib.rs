@@ -119,8 +119,8 @@ impl OpenCv {
       // imwrite(&filename_out.to_string(), &image_copy, &Vector::new()).expect("imwrite fail");
 
       // pose estimation
-      let mut rvecs: VectorOfPoint3d = VectorOfPoint3d::default();
-      let mut tvecs: VectorOfPoint3d = VectorOfPoint3d::default();
+      let mut rvecs: VectorOfVec3d = VectorOfVec3d::default();
+      let mut tvecs: VectorOfVec3d = VectorOfVec3d::default();
       estimate_pose_single_markers(&corners, 0.05, &camera_matrix, &dist_coeffs, &mut rvecs, &mut tvecs, &mut no_array());
       // println!("rvecs: {:?}", rvecs);
       // println!("tvecs: {:?}", tvecs);
@@ -132,15 +132,15 @@ impl OpenCv {
       println!("2");
       for i in 0..ids.len() {
         println!("loop\n");
-        // let rvec: Point3d = rvecs_iter;
-        // let tvec: Point3d = tvecs_iter;
-        println!("{} ----- rvec: {:?} \n tvec: {:?}", i, rvecs_iter.next(), tvecs_iter.next());
-        // draw_frame_axes(&mut image_copy, &camera_matrix, &dist_coeffs, &rvec, &tvec, 0.1, 3);
+        let mut rvec: Vec3d = rvecs_iter.next().expect("next fail");
+        let mut tvec: Vec3d = tvecs_iter.next().expect("next fail");
+        println!("{} ----- rvec: {:?} \n tvec: {:?}", i, rvec, tvec);
+        draw_frame_axes(&mut image_copy, &camera_matrix, &dist_coeffs, &rvec, &tvec, 0.1, 3);
         // rvecs_iter.next().unwrap();
         // tvecs_iter.next().unwrap();
       }
 
-      // imwrite(&filename_out.to_string(), &image_copy, &Vector::new()).expect("imwrite fail");
+      imwrite(&filename_out.to_string(), &image_copy, &Vector::new()).expect("imwrite fail");
     }
     else {
       println!("No marker detected");
