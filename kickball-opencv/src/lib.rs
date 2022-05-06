@@ -5,8 +5,7 @@ use opencv::prelude::*;
 use opencv::core::*;
 use opencv::imgcodecs::*;
 use opencv::imgproc::*;
-use opencv::types::VectorOfPoint;
-use opencv::types::VectorOfVectorOfPoint;
+use opencv::types::*;
 use core::ffi::c_void;
 use std::iter::IntoIterator;
 
@@ -231,54 +230,47 @@ impl OpenCv{
         env.wrap(&mut obj,src);
         obj
         }
-
-
     }
 
 
     #[napi]
-    pub fn js_cvt_color(&self,env:Env,src:Object,code: i32, dst_cn: i32)->Object
+    pub fn cvt_color(&self,env:Env,src:Object,code: i32, dst_cn: i32)->Object
     {
         let src = env.unwrap::<Mat>(&src).unwrap();
         let mut dst:Mat = Mat::default(); //= Mat::new_rows_cols_with_default(src.rows(),src.cols(),src.typ(),Scalar::new(0.0,0.0,0.0,0.0)).ok().unwrap();
         cvt_color(src,&mut dst,code,dst_cn);
-        println!("js_cvt_color");
         let mut obj = env.create_object().unwrap();
         env.wrap(&mut obj,dst);
         obj
     }
 
     #[napi]
-    pub fn js_gaussian_blur(&self,env:Env,src:Object,size:Object,sigma_x: f64, sigma_y: f64, border_type: i32)->Object
+    pub fn gaussian_blur(&self,env:Env,src:Object,size:Object,sigma_x: f64, sigma_y: f64, border_type: i32)->Object
     {
         let src = env.unwrap::<Mat>(&src).unwrap();
         let size = env.unwrap::<Size>(&size).unwrap();
         let mut dst:Mat = Mat::default(); //= Mat::new_rows_cols_with_default(src.rows(),src.cols(),src.typ(),Scalar::new(0.0,0.0,0.0,0.0)).ok().unwrap();
         gaussian_blur(src,&mut dst,*size,sigma_x,sigma_y,border_type);
-        println!("gaussian_blur");
         let mut obj = env.create_object().unwrap();
         env.wrap(&mut obj,dst);
         obj
     }
 
     #[napi]
-    pub fn js_in_range(&self,env:Env,src:Object,lowerb:Object,upperb:Object)->Object
+    pub fn in_range(&self,env:Env,src:Object,lowerb:Object,upperb:Object)->Object
     {
         let src = env.unwrap::<Mat>(&src).unwrap();
         let lower = env.unwrap::<Scalar>(&lowerb).unwrap();
         let upper = env.unwrap::<Scalar>(&upperb).unwrap();
         let mut dst:Mat = Mat::default(); //= Mat::new_rows_cols_with_default(src.rows(),src.cols(),src.typ(),Scalar::new(0.0,0.0,0.0,0.0)).ok().unwrap();
         in_range(src,lower,upper,&mut dst);
-        println!("js_in_range");
         let mut obj = env.create_object().unwrap();
         env.wrap(&mut obj,dst);
         obj
     }
 
-
-
     #[napi]
-    pub fn js_erode(&self,env:Env,src:Object,kernel:Object,point:Object,iterations:i32,border_type:i32,border_value:Object)->Object
+    pub fn erode(&self,env:Env,src:Object,kernel:Object,point:Object,iterations:i32,border_type:i32,border_value:Object)->Object
     {
 
         let defaultBorderValue = morphology_default_border_value().ok().unwrap();
@@ -288,14 +280,13 @@ impl OpenCv{
         let kernel = env.unwrap::<Mat>(&kernel).unwrap(); //get_structuring_element(0,Size::new(3,3),Point::new(-1,-1)).ok().unwrap();
         let mut dst:Mat = Mat::default(); //= Mat::new_rows_cols_with_default(src.rows(),src.cols(),src.typ(),Scalar::new(0.0,0.0,0.0,0.0)).ok().unwrap();
         erode(src,&mut dst,kernel,*point,iterations,border_type,defaultBorderValue);
-        println!("erode");
         let mut obj = env.create_object().unwrap();
         env.wrap(&mut obj,dst);
         obj
     }
 
     #[napi]
-    pub fn js_dilate(&self,env:Env,src:Object,kernel:Object,anchor:Object,iterations:i32,border_type:i32,border_value:Object) -> Object{
+    pub fn dilate(&self,env:Env,src:Object,kernel:Object,anchor:Object,iterations:i32,border_type:i32,border_value:Object) -> Object{
 
         let defaultBorderValue = morphology_default_border_value().ok().unwrap();
         let src = env.unwrap::<Mat>(&src).unwrap();
@@ -310,7 +301,6 @@ impl OpenCv{
         obj
     }
 
-    // wxc
     #[napi]
     pub fn find_contours(&self,env:Env,src:Object,mode:i32,method:i32) -> Object{
         let src = env.unwrap::<Mat>(&src).unwrap();
@@ -322,7 +312,6 @@ impl OpenCv{
         obj
     }
 
-    // wxc
     #[napi]
     pub fn contour_area(&self,env:Env,src:Object) -> f64{
         let src = env.unwrap::<VectorOfPoint>(&src).unwrap();
@@ -331,7 +320,6 @@ impl OpenCv{
         area_float
     }
 
-    // wxc
     #[napi]
     pub fn get_area_max_contour(&self,env:Env,contours:Object,threshold:f64) -> Object{
         let contours = env.unwrap::<VectorOfVectorOfPoint>(&contours).unwrap();
@@ -358,7 +346,7 @@ impl OpenCv{
     }
 
     #[napi]
-    pub fn js_min_enclosing_circle(&self,env:Env,points:Object) -> Object{
+    pub fn min_enclosing_circle(&self,env:Env,points:Object) -> Object{
         let src = env.unwrap::<VectorOfPoint>(&points).unwrap();
         let mut center:Point2f=Point2f::default();
         let mut radius:f32 = 0.0;
