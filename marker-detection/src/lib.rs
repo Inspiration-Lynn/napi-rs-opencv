@@ -67,22 +67,22 @@ impl MarkerDetection {
   }
 
   // Class method
-  #[napi]
-  pub fn im_read(&self, env: Env, filename: String) -> Object {
-    let img_result = imread(&filename, IMREAD_UNCHANGED);
-    // Mat in Rust: img
-    let img = img_result.expect("imread fail");   
-    // create JsObject: obj
-    let mut obj = env.create_object().expect("create_object fail");
-    env.wrap(&mut obj, img).expect("wrap fail");
-    obj
-  }
+  // #[napi]
+  // pub fn im_read(&self, env: Env, filename: String) -> Object {
+  //   let img_result = imread(&filename, IMREAD_UNCHANGED);
+  //   // Mat in Rust: img
+  //   let img = img_result.expect("imread fail");   
+  //   // create JsObject: obj
+  //   let mut obj = env.create_object().expect("create_object fail");
+  //   env.wrap(&mut obj, img).expect("wrap fail");
+  //   obj
+  // }
 
-  #[napi]
-  pub fn im_write(&self, env: Env, filename: String, obj: Object) {
-    let src = env.unwrap::<Mat>(&obj).expect("unwrap fail");
-    imwrite(&filename, src, &Vector::new()).expect("imwrite fail");
-  }
+  // #[napi]
+  // pub fn im_write(&self, env: Env, filename: String, obj: Object) {
+  //   let src = env.unwrap::<Mat>(&obj).expect("unwrap fail");
+  //   imwrite(&filename, src, &Vector::new()).expect("imwrite fail");
+  // }
 
 
   #[napi]

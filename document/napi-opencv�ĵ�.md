@@ -241,3 +241,34 @@ var src = opcv.imDecode(cmsize,cmptr);
 #### 枚举
 
 ##### PREDEFINED_DICTIONARY_NAME
+
+#### 类方法
+
+##### detectMarkers：标记检测
+
+```javascript
+function detectMarkers(filename_in: String, filename_out: String, dict: Number)
+```
+
+- Parameters：
+
+  - filename_in：待检测图片路径
+
+  - filename_out：检测完成图片输出路径
+
+  - dict：字典类型，见枚举PREDEFINED_DICTIONARY_NAME
+
+##### poseEstimation：姿态检测
+
+```javascript
+function poseEstimation(filename_in: String, filename_out: String, dict: i32, camera_params: String)
+```
+
+- Parameters：
+
+  - filename_in：待检测图片路径
+
+  - filename_out：检测完成图片输出路径
+
+  - dict：字典类型，见枚举PREDEFINED_DICTIONARY_NAME
+  - camera_params：相机参数yaml/yml文件路径
