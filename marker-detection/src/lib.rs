@@ -86,10 +86,10 @@ impl MarkerDetection {
 
 
   #[napi]
-  pub fn detect_markers(&self, env: Env, filename_in: String, filename_out: String) {
+  pub fn detect_markers(&self, env: Env, filename_in: String, filename_out: String, dict: i32) {
     // marker detection
     let image = imread(&filename_in, IMREAD_COLOR).expect("imread fail");
-    let dictionary: Ptr<Dictionary> = get_predefined_dictionary_i32(DICT_6X6_250).expect("get_predefined_dictionary fail");
+    let dictionary: Ptr<Dictionary> = get_predefined_dictionary_i32(dict).expect("get_predefined_dictionary fail");
     let mut corners: VectorOfVectorOfPoint2f = VectorOfVectorOfPoint2f::default();
     let mut ids: VectorOfi32 = VectorOfi32::default();
     let parameters: Ptr<DetectorParameters> = DetectorParameters::create().expect("DetectorParameters::create fail");
@@ -113,10 +113,10 @@ impl MarkerDetection {
   }
 
   #[napi]
-  pub fn pose_estimation(&self, filename_in: String, filename_out: String, camera_params: String) {
+  pub fn pose_estimation(&self, filename_in: String, filename_out: String, dict: i32, camera_params: String) {
     // marker detection
     let image = imread(&filename_in, IMREAD_COLOR).expect("imread fail");
-    let dictionary: Ptr<Dictionary> = get_predefined_dictionary_i32(DICT_6X6_250).expect("get_predefined_dictionary fail");
+    let dictionary: Ptr<Dictionary> = get_predefined_dictionary_i32(dict).expect("get_predefined_dictionary fail");
     let mut corners: VectorOfVectorOfPoint2f = VectorOfVectorOfPoint2f::default();
     let mut ids: VectorOfi32 = VectorOfi32::default();
     let parameters: Ptr<DetectorParameters> = DetectorParameters::create().expect("DetectorParameters::create fail");
