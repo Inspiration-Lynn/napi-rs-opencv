@@ -1,17 +1,16 @@
-const { fibonacci } = require("./libmarker_detection.node");
-const a = require("./libmarker_detection.node");
+const Aruco = require("./libmarker_detection.node");
 
-console.log("fib: ", fibonacci(11));
+var aruco = new Aruco.MarkerDetection();
 
-var opcv = new a.OpenCv();
+// console.log("[before imRead]");
+// var src = marker_detect.imRead("ball.jpg");
+// console.log("[after imRead]");
+// marker_detect.imWrite("./out/output.jpg", src);
 
-console.log("[before imRead]");
-var src = opcv.imRead("ball.jpg");
-console.log("[after imRead]");
-opcv.imWrite("./out/output.jpg", src);
+aruco.detectMarkers("marker.png", "./out/marker_detection_out.png");
 
-opcv.detectMarkers(
+aruco.poseEstimation(
   "marker.png",
-  "./out/marker_out1.png",
-  "./tutorial_camera_params.yml"
+  "./out/pose_estimation_out.png",
+  "./camera_params.yml"
 );
