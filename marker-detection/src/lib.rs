@@ -157,8 +157,27 @@ impl MarkerDetection {
       println!("No marker detected, pose estimation fail");
     }
   }
+}
 
 
+// napi register module for ohos3.0 LTS ace
+static mut MODULE: sys::napi_module = sys::napi_module {
+  nm_version: 1,
+  nm_flags: 0,
+  nm_filename: "lib.rs\u{0}".as_ptr() as *const _,
+  nm_register_func: Some(napi_register_module_v1),
+  nm_modname: concat!(env!("CARGO_PKG_NAME"), "\u{0}").as_ptr() as *const _,
+  nm_priv: std::ptr::null_mut(),
+  reserved: [std::ptr::null_mut(); 4],
+};
+
+#[napi::bindgen_prelude::ctor]
+fn _my_module_init() {
+  unsafe { sys::napi_module_register(&mut MODULE as *mut _) }
+}
+
+extern "C" {
+  fn napi_register_module_v1(env: sys::napi_env, exports: sys::napi_value) -> sys::napi_value;
 }
 
 
