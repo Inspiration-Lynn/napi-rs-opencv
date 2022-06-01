@@ -1,0 +1,29 @@
+[build]
+target = "aarch64-unknown-linux-musl"
+
+[env]
+CXX = "/home/lynn/env/clang/ohos/linux-x86_64/llvm/bin/clang++"
+CC = "/home/lynn/env/clang/ohos/linux-x86_64/llvm/bin/clang"
+CFLAGS = "--sysroot=/home/lynn/env/musl --target=aarch64-linux-ohosmusl"
+CXXFLAGS = "--sysroot=/home/lynn/env/musl --target=aarch64-linux-ohosmusl"
+CXXSTDLIB = "c++"
+
+[target.aarch64-unknown-linux-musl]
+linker = "/home/lynn/env/clang/ohos/linux-x86_64/llvm/bin/ld.lld"
+
+rustflags = [
+    "-Ctarget-feature=-crt-static",
+    "-Clink-self-contained=off",
+    "-L/home/lynn/env/musl/usr/lib/aarch64-linux-ohosmusl",
+    "-L/home/lynn/env/clang/ohos/linux-x86_64/llvm/lib/aarch64-linux-ohosmusl",
+    "-L/home/lynn/env/clang/ohos/linux-x86_64/llvm/lib/aarch64-linux-ohosmusl/c++",
+    "-L/home/lynn/env/clang/ohos/linux-x86_64/llvm/lib"
+]
+
+# "-Cembed-bitcode=yes",
+#    "-Clink-arg=--gc-sections",
+#    "-Clto",
+
+[unstable]
+build-std = ["core", "compiler_builtins", "alloc", "std", "panic_unwind"]
+build-std-features = ["llvm-libunwind"]
